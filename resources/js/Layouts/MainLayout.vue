@@ -4,8 +4,8 @@ import {Link} from "@inertiajs/vue3";
 
 <template>
     <div class="p-4 w-3/4 mx-auto">
-        <div>
-            <Link :href="route('chats.index')" class="text-sky-500">
+        <div class="mb-5">
+            <Link :href="route('chats.index')" class="text-sky-500 text-2xl">
                 Chats
             </Link>
         </div>

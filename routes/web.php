@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 require_once 'groups/chats.php';
+require_once 'groups/messages.php';
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [

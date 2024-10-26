@@ -11,5 +11,6 @@ class Message extends Model
     use HasFactory;
 
     protected $table = 'messages';
+
     protected $fillable = ['chat_id', 'user_id', 'body'];
 }
