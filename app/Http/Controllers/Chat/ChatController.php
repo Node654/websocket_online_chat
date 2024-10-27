@@ -7,6 +7,7 @@ use App\Facade\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\StoreRequest;
 use App\Http\Resources\Chat\ChatResources;
+use App\Http\Resources\Message\MessageResources;
 use App\Http\Resources\User\UserResources;
 use App\Models\Chat;
 use Illuminate\Http\RedirectResponse;
@@ -22,7 +23,11 @@ class ChatController extends Controller
 
     public function show(Chat $chat): Response
     {
-        return Inertia::render('Chat/Show', ['chat' => new ChatResources($chat), 'users' => UserResources::collection($chat->users()->get())]);
+        return Inertia::render('Chat/Show', [
+            'chat' => new ChatResources($chat),
+            'users' => UserResources::collection($chat->users()->get()),
+            'messages' => MessageResources::collection($chat->messages()->with('user')->get())
+            ]);
     }
 
     public function store(StoreRequest $request): RedirectResponse
