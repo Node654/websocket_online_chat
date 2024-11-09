@@ -18,6 +18,7 @@ class ChatResources extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'users' => $this->users,
+            'readableMessageCount' => $this->un_readable_message_status_auth_user_count
         ];
     }
 }

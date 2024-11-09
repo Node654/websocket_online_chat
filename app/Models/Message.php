@@ -22,6 +22,6 @@ class Message extends Model
 
     public function getIsOwnerAttribute(): bool
     {
-        return $this->user_id === auth()->id();
+        return (int)$this->user_id === (int)auth()->id();
     }
 }

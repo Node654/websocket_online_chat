@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static \App\Models\Message|JsonResponse store(array $data)
+ * @method static update(array $data)
  *
  * @see MessageService
  */

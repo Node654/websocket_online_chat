@@ -23,6 +23,10 @@ class ChatController extends Controller
 
     public function show(Chat $chat): Response
     {
+        $chat->unReadableMessageStatusAuthUser()->update([
+            'is_read' => true
+        ]);
+
         return Inertia::render('Chat/Show', [
             'chat' => new ChatResources($chat),
             'users' => UserResources::collection($chat->users()->get()),

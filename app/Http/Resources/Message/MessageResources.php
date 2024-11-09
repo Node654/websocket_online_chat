@@ -16,11 +16,11 @@ class MessageResources extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'chat_id' => $this->chat_id,
-            'user_id' => $this->user_id,
             'user_name' => UserResources::make($this->user),
             'body' => $this->body,
-            'is_owner' => $this->isOwner,
+            'is_owner' => $this->is_owner,
             'createdAt' => $this->created_at->diffForHumans(),
         ];
     }
