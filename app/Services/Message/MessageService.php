@@ -4,6 +4,7 @@ namespace App\Services\Message;
 
 use App\Events\Message\NotificationStatusEvent;
 use App\Events\Message\StoreEvent;
+use App\Jobs\Message\NotificationStatusJob;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\MessageStatus;
@@ -19,42 +20,16 @@ class MessageService
         $chat = Chat::find($data['chat_id']);
         $users = $chat->users()->whereNot('user_id', auth()->id())->get();
 
-        try {
-            DB::beginTransaction();
+        $message = Message::create([
+            'chat_id' => $chat->id,
+            'user_id' => auth()->id(),
+            'body' => $data['body'],
+        ]);
 
-            $message = Message::create([
-                'chat_id' => $chat->id,
-                'user_id'=> auth()->id(),
-                'body' => $data['body'],
-            ]);
+        NotificationStatusJob::dispatch($users, $chat->id, $message);
 
-            foreach ($users as $user)
-            {
-                DB::table('message_status')->insert([
-                    'chat_id' => $chat->id,
-                    'user_id' => $user->id,
-                    'message_id' => $message->id,
-                ]);
+        broadcast(new StoreEvent($message))->toOthers();
 
-                $count = MessageStatus::query()
-                    ->where('user_id', $user->id)
-                    ->where('is_read', false)
-                    ->count();
-
-                broadcast(new NotificationStatusEvent($count, $user, $chat->id))->toOthers();
-            }
-
-            broadcast(new StoreEvent($message))->toOthers();
-
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-
-            return response()->json([
-                'status' => 'failed',
-                'message' => $e->getMessage(),
-            ], 400);
-        }
         return $message;
     }
 

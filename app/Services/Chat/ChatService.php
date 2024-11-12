@@ -11,7 +11,7 @@ class ChatService
 {
     public function index(): AnonymousResourceCollection
     {
-        return ChatResources::collection(auth()->user()->chats()->withCount('unReadableMessageStatusAuthUser')->has('messages')->get());
+        return ChatResources::collection(auth()->user()->chats()->withCount('unReadableMessageStatusAuthUser')->has('messages')->with('lastMessage')->get());
     }
 
     public function store(array $data): Chat

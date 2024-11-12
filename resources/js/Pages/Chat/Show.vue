@@ -33,7 +33,7 @@ function storeMessage() {
 Echo.channel(`store-message.${props.chat.id}`)
     .listen('.store-message', res => {
         props.messages.push(res.message);
-        if (page.url === route('chats.show', props.chat.id)) {
+        if (page.url === `/chats/${props.chat.id}`) {
             axios.patch(route('messages.update'), {
                 chat_id: res.message.chat_id,
                 message_id: res.message.id,
@@ -42,7 +42,6 @@ Echo.channel(`store-message.${props.chat.id}`)
             })
         }
     });
-
 </script>
 
 <style scoped>
