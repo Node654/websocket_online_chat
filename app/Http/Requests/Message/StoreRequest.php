@@ -26,7 +26,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'chat_id' => 'required|integer|exists:chats,id',
-            'body' => 'required|string'
+            'body' => 'required|string',
         ];
     }
 

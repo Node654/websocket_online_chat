@@ -17,6 +17,7 @@ class MessageController extends Controller
         if ($messageOrJsonResponse instanceof JsonResponse) {
             return $messageOrJsonResponse;
         }
+
         return MessageResources::make($messageOrJsonResponse);
     }
 

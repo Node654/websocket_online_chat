@@ -21,8 +21,7 @@ class NotificationStatusJob implements ShouldQueue
         private Collection $users,
         private int $chatId,
         private Message $message
-    )
-    {
+    ) {
         //
     }
 
@@ -31,8 +30,7 @@ class NotificationStatusJob implements ShouldQueue
      */
     public function handle(): void
     {
-        foreach ($this->users as $user)
-        {
+        foreach ($this->users as $user) {
             DB::table('message_status')->insert([
                 'chat_id' => $this->chatId,
                 'user_id' => $user->id,

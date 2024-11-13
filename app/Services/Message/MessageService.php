@@ -2,16 +2,12 @@
 
 namespace App\Services\Message;
 
-use App\Events\Message\NotificationStatusEvent;
 use App\Events\Message\StoreEvent;
 use App\Jobs\Message\NotificationStatusJob;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\MessageStatus;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
-use Mockery\Exception;
 
 class MessageService
 {
@@ -38,6 +34,7 @@ class MessageService
         MessageStatus::query()
             ->where(['user_id' => $data['user_id'], 'message_id' => $data['message_id'], 'is_read' => false])
             ->update(['is_read' => true]);
+
         return redirect()->route('chats.show', $data['chat_id'], 303);
     }
 }

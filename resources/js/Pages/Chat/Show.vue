@@ -5,7 +5,8 @@ import {onBeforeUnmount, onMounted, ref} from "vue";
 import {usePage} from "@inertiajs/vue3";
 
 const body = ref('');
-const page = usePage();
+const page = ref(1);
+const isVisibleLoadedMessageBtn = ref(true);
 
 const props = defineProps({
     chat: {
@@ -19,29 +20,43 @@ const props = defineProps({
     messages: {
         type: Object,
         required: true
+    },
+    isLastPage: {
+        type: Boolean,
+        required: true
     }
 })
 
 function storeMessage() {
     axios.post(route('messages.store'), {'chat_id': props.chat.id, 'body': body.value})
         .then(res => {
-            props.messages.push(res.data);
+            props.messages.data.unshift(res.data);
             body.value = '';
+        })
+}
+
+function getMessage() {
+    console.log(page.value)
+    axios.get(route('chats.show', props.chat.id) + `?page=${++page.value}`)
+        .then(res => {
+            usePage().props.isLastPage = res.data.isLastPage;
+            props.messages.data.push(...res.data.messages);
         })
 }
 
 Echo.channel(`store-message.${props.chat.id}`)
     .listen('.store-message', res => {
-        props.messages.push(res.message);
-        if (page.url === `/chats/${props.chat.id}`) {
+        props.messages.data.unshift(res.message);
+        if (usePage().url === `/chats/${props.chat.id}`) {
             axios.patch(route('messages.update'), {
                 chat_id: res.message.chat_id,
                 message_id: res.message.id,
-                user_id: page.props.auth.user.id
+                user_id: usePage().props.auth.user.id
             }).then(res => {
             })
         }
     });
+
 </script>
 
 <style scoped>
@@ -54,7 +69,14 @@ Echo.channel(`store-message.${props.chat.id}`)
             <div class="w-3/4 border border-gray-400 p-4 mr-4 bg-white">
                 <div class="mb-5">
                     <h2 class="mb-5">{{ props.chat.title ?? 'Your chat' }}</h2>
-                    <div v-for="message in props.messages" :class="message.is_owner ? 'text-right' : '' ">
+                    <div class="text-center mb-4">
+                        <button v-if="! isLastPage"
+                                @click.prevent="getMessage"
+                                class="text-white bg-sky-500 rounded-full p-2 hover:bg-amber-600">Load more message
+                        </button>
+                    </div>
+                    <div v-for="message in props.messages.data.slice().reverse()"
+                         :class="message.is_owner ? 'text-right' : '' ">
                         <div
                             :class="['inline-block mb-4', message.is_owner ? 'text-left bg-green-100 p-3' : 'bg-sky-100 p-3']">
                             <h3 class="mb-1">{{ message.user_name.name }}</h3>

@@ -19,9 +19,7 @@ class StoreEvent implements ShouldBroadcast
      */
     public function __construct(
         private Message $message
-    )
-    {
-    }
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.
@@ -31,7 +29,7 @@ class StoreEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('store-message.' . $this->message->chat_id),
+            new Channel('store-message.'.$this->message->chat_id),
         ];
     }
 
@@ -51,7 +49,7 @@ class StoreEvent implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'message' => MessageResources::make($this->message)
+            'message' => MessageResources::make($this->message),
         ];
     }
 }

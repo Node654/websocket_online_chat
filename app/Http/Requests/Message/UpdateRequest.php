@@ -24,7 +24,7 @@ class UpdateRequest extends FormRequest
         return [
             'message_id' => 'required|int|exists:messages,id',
             'user_id' => 'required|int|exists:users,id',
-            'chat_id' => 'required|int|exists:chats,id'
+            'chat_id' => 'required|int|exists:chats,id',
         ];
     }
 }
