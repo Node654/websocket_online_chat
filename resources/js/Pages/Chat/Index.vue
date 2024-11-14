@@ -6,7 +6,7 @@ import {Link} from "@inertiajs/vue3";
 import {ref} from "vue";
 
 const isGroup = ref(false);
-const title = ref('');
+const title = ref(null);
 const usersIds = ref([]);
 const page = usePage();
 
@@ -30,6 +30,7 @@ function createChat(id) {
 
 function createGroupChat() {
     if (usersIds.value.length < 2) return;
+    title.value = title.value ?? 'Your chat';
     router.post(route('chats.store'), {
         users: usersIds.value,
         title: title.value

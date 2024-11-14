@@ -17,7 +17,7 @@ class ChatResources extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'title' => $this->title ?? 'Общаетесь с ' . $this->chatWith->name,
             'users' => $this->users,
             'last_message' => MessageResources::make($this->lastMessage),
             'readableMessageCount' => $this->un_readable_message_status_auth_user_count,

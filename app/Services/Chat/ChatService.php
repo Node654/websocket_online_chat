@@ -11,7 +11,7 @@ class ChatService
 {
     public function index(): AnonymousResourceCollection
     {
-        return ChatResources::collection(auth()->user()->chats()->withCount('unReadableMessageStatusAuthUser')->has('messages')->with('lastMessage')->get());
+        return ChatResources::collection(auth()->user()->chats()->withCount('unReadableMessageStatusAuthUser')->has('messages')->with(['lastMessage', 'chatWith'])->get());
     }
 
     public function store(array $data): Chat
@@ -19,7 +19,6 @@ class ChatService
         $userIds = array_merge($data['users'], [auth()->id()]);
         sort($userIds);
         $userIdsStr = implode('-', $userIds);
-
         try {
             DB::beginTransaction();
 
